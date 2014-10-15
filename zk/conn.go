@@ -612,12 +612,13 @@ func (c *Conn) ChildrenW(path string) ([]string, *Stat, <-chan Event, error) {
 	var ech <-chan Event
 	res := &getChildren2Response{}
 	_, err := c.request(opGetChildren2, &getChildren2Request{Path: path, Watch: true}, res, func(req *request, res *responseHeader, err error) {
-		if err == nil {
+		/*if err == nil {
 			ech = c.addWatcher(path, watchTypeChild)
-		}
+		}*/
+		ech = c.addWatcher(path, watchTypeChild)
 	})
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, nil, ech, err
 	}
 	return res.Children, &res.Stat, ech, err
 }
